@@ -2,12 +2,16 @@ import os.path
 import sys
 import json
 import apiai
-from api.ai import Agent
-import google
+from google import search
 
 CLIENT_ACCESS_TOKEN = '871dda22df9b4278b2c1f7de27d5b9ab'
-def websitelink(arg):
-    pass
+
+def websitelink(symptom):
+    list = []
+    for result in search(symptom + ' symptom mayo clinic', stop = 20):
+        list.append(result)
+    url = list[0]
+    print(url)
 
 def main():
     user_input = ''
@@ -25,8 +29,11 @@ def main():
         print(response_dict)
         query_response = (response_dict['result']['fulfillment']['speech'])
         print('Bot: '+ query_response)
-        if ['result']['parameters']['Symptoms']:
-            websitelink(['result']['parameters']['Symptoms'])
+        try:
+            if response_dict['result']['parameters']['Symptoms']:
+                websitelink(response_dict['result']['parameters']['Symptoms'][0])
+        except:
+            pass
 
 if __name__ == "__main__":
     main()
